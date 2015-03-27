@@ -16,3 +16,7 @@ user.login("wileytigram_admin", "wileytigram_admin", function(_response) {
   		Ti.API.error('error logging in ' + _response.error);
 	}
 });
+Alloy.Globals.openCurrentTabWindow = function(_window) {
+	$.tabGroup.activeTab.open(_window);
+};
+

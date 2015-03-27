@@ -22,7 +22,7 @@ exports.definition = {
 				this.config.Cloud.Users.login(
 					//remember, these curly-braced key-value pairs are JavaScript
 					//object literals - they are usually what is sent as 
-					//arguments to many methods in the API
+					//arguments to many methods in the API- Babb
 					{
 						login: _login,
 						password: _password,

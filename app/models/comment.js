@@ -3,7 +3,7 @@ exports.definition = {
 
 		adapter: {
 			type: "acs",
-			collection_name: "photos"
+			collection_name: "reviews"
 		}
 	},
 	extendModel: function(Model) {

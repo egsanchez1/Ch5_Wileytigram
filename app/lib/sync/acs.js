@@ -17,6 +17,7 @@ function InitAdapter(config) {
 	config.Cloud = Cloud;
 }
 
+
 function Sync(method, model, options) {
 	var object_name = model.config.adapter.collection_name;
 
@@ -26,8 +27,10 @@ function Sync(method, model, options) {
 		processACSPhotos(model, method, options);
 	} else if (object_name === "users") {
 		processACSUsers(model, method, options);
-	} else if (object_name === "reviews"){
+	} else if (object_name === "reviews") {
 		processACSComments(model, method, opts);
+	} else if (object_name === "friends"){
+		processACSFriends(model, method, opts);
 	}
 }
 
@@ -148,7 +151,7 @@ function processACSComments(model, method, opts) {
 		break;
 
 	}
-}
+} //taken from babb, diffrent in book?
 
 
 
