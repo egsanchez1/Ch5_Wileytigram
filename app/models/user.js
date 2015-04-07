@@ -22,8 +22,7 @@ exports.definition = {
 			{
 				var self = this;
 				this.config.Cloud.Users.login(
-					//Dr. Babb
-					//remember, these curly-braced key-value pairs are JavaScript
+					//BABB-remember, these curly-braced key-value pairs are JavaScript
 					//object literals - they are usually what is sent as 
 					//arguments to many methods in the API
 					{
@@ -60,7 +59,7 @@ exports.definition = {
 				);
 			}, //end login
 
-			/** Dr. Babb
+			/**
 			 * Allows for the creation of a new user
 			 *   
  		     * @param {Object} _ucerInfo
@@ -113,7 +112,7 @@ exports.definition = {
 						}
 					});
 				}
-			}, 
+			}, //end createAccount
 			
 			/**
 			 * the ability for the user to logout 
@@ -159,12 +158,11 @@ exports.definition = {
 						}
 					}
 				);
-			}, 
-			
+			}, //end logout
 			/**
-			 * checks to see that the user is authenticated currently 
+			 * this checks to see that the user is authenticated currently 
 			 */
-			authenticated: function() //Pg. 180 ch 7starts this
+			authenticated: function()
 			{
 				var cloud = this.config.Cloud;
 				var TAP = Ti.App.Properties;
@@ -180,7 +178,7 @@ exports.definition = {
 				return false;
 			},
 			
-			//shows whos logged in - who the user is - by sessionId
+			//shows who is currently logged in - who the user is - by sessionId
 			showMe: function(_callback)
 			{
 				var cloud = this.config.Cloud;
@@ -205,13 +203,13 @@ exports.definition = {
 								}
 							);
 						} else {
-							//error
+							//no bueno
 							Ti.App.error(e);
 							
 							TAP.removeProperty("sessionId");
 							TAP.removeProperty("user");
 							
-							//call back in case of error
+							//call back in the case of "no bueno"
 							_callback && _callback(
 								{
 									success: false,
@@ -222,10 +220,12 @@ exports.definition = {
 						}
 					}
 				);
-			}, 
+			}, //end showMe
 			
-			/** via Dr. Babb
-			 * Looks for the validity of the FB access token.  Uses ACS Social Integrations
+			/**
+			 * Looks for the validity of the FB access token.  
+			 * 
+			 * Uses ACS Social Integrations
 			 * if a FB token is detected to obtain an authenticated user model.  We also
 			 * set values in the properties store indicating a valid login
 			 *  
@@ -284,10 +284,10 @@ exports.definition = {
           				}
           			}
           		);
-      		}, // end updateFacebookLoginStatus ends on p.190
+      		}, // end updateFacebookLoginStatus
       		
-			/** Dr. BABB
-			 * creates a list of followers of type Friend.  The boolean _followers determins if these
+			/**
+			 * creates a list of followers of type Friend.  The boolean _followers determines if these
 			 * users are friends or not
 			 * @param {Function} _callback
 			 * @param {Boolean} _followers
@@ -322,7 +322,7 @@ exports.definition = {
         			}
         		);
 
-      		}, 
+      		}, //end getFollowers
       		
 			/**
        		 * By passing false to getFollowers, you get only the user's friends
@@ -366,7 +366,7 @@ exports.definition = {
         		);
 	        }, //end followUser
 	        
-	        /** via BABB
+	        /**
              * unfollows a user.  Each of these methods are backbone methods for working
              * on the model data.
              * @param {String} _userid
@@ -400,7 +400,7 @@ exports.definition = {
           				}
         			}
         		);
-      		}, 
+      		}, //end unFollowUser
 			
 		});
 
@@ -408,7 +408,7 @@ exports.definition = {
 	},
 	extendCollection: function(Collection) {
 		_.extend(Collection.prototype, {
-			// extended functions and properties here
+			// extended functions and properties go here
 		});
 
 		return Collection;

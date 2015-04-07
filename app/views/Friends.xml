@@ -1,4 +1,68 @@
 <Alloy>
-	<View class="container">
-	</View>
+	<!-- as was the case very early in the book, we use Alloy Views XML to 
+	     establish what collection the Window/View should work with using the
+	     Collection element -->
+	<Collection src="user" instance="true" id="friendUserCollection"/>
+	<Tab title="Friends">
+		<Window title="Friends" id="friendsWindow">
+			<!-- used to toggle between different types of users -->
+			<View id="filterContainer">
+				<!-- TABBED BAR THAT SWITCHES BETWEEN USERS-->
+				<TabbedBar id="filter" platform="ios">
+					<Labels>
+						<Label>
+							Users
+						</Label>
+						<Label>
+							Friends
+						</Label>
+					</Labels>
+				</TabbedBar>
+				<View id='androidPickerContainer' platform="android" >
+					<Picker id="filter" >
+						<PickerColumn id="column1" >
+							<PickerRow title="Users"/>
+							<PickerRow title="Friends"/>
+						</PickerColumn>
+					</Picker>
+				</View>
+			</View>
+		
+			<ListView id='listView'>
+			
+				<Templates>
+					<ItemTemplate name="fullItem" height="40dp" width="Ti.UI.FILL">
+						<View id="userView">
+							<ImageView bindId="userAvatar" id="userAvatar" />
+							<Label bindId="userName" id="userName"/>
+						</View>
+						<Button title="Follow" class="actionBtn"
+						onClick="followBtnClicked"/>
+					</ItemTemplate>
+					<!-- This is the template we use to show only friends -->
+					<ItemTemplate name="friends" height="40dp" width="Ti.UI.FILL">
+						<View id="userView">
+							<ImageView bindId="userAvatar" id="userAvatar" />
+							<Label bindId="userName" id="userName"/>
+						</View>
+						<!-- notice that we specify the event-handler in the template -->						
+						<Button title="UnFollow" class="actionBtn"
+						onClick="followingBtnClicked"/>
+					</ItemTemplate>
+				</Templates>
+				<!-- The ListSection is very similar to the TableView. Items related to how the collection
+				     should be handled are here.  Some of this shows up later in the chapter --> 
+				<ListSection id="section" dataCollection="$.friendUserCollection"
+				dataTransform="doTransform"
+				dataFilter="doFilter">
+					<!-- Accordingly, we show each list item and make it clear that a template should be used 
+					     to specify how the list item should be displayed --> 
+					<ListItem template="{template}" userName:text="{title}"
+					userAvatar:image="{image}"
+					modelId="{modelId}">
+					</ListItem>
+				</ListSection>
+			</ListView>
+		</Window>
+	</Tab>
 </Alloy>
