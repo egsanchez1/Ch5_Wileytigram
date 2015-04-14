@@ -1,6 +1,7 @@
 var parameters = arguments[0] || {};
 var currentPhoto = parameters.photo || {};
 var parentController = parameters.parentController ||{};
+var push = require('pushNotifications)');
 
 /* Dr. Babb---
  * WE need to load comments into the view when the controller is opened.
@@ -216,6 +217,28 @@ function addComment(_content) {
 		}
 	});
 };
+	function notifyFollowers(_model, _photo, _message) {
+	var currentUser = Alloy.Globals.currentUser;
+	
+	push.sendPush({
+		payload : {
+			custom : {
+				from : currentUser.get("id"),
+				commentedOn : _photo.id,
+				commentedId : _model.id,
+			},
+			sound : "default",
+			alert : _message + " " + currentUser.get("email")
+		},
+		to_ids : _photo.get("user").id
+	}, function(_responsePush) {
+		if (_responsePush.success) {
+			alert("Notified user of new comment");
+		} else {
+			alert("Error notifying user of new comment");
+		}
+	});
+}
 
 //before opening the view, we initialiaze the data
 $.initialize = function()

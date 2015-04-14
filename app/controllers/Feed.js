@@ -2,6 +2,9 @@ var args = arguments[0] || {};
 
 // loads Ge-location library
 var geo = require("geo");
+// load sharing library
+var sharing = require("sharing");
+var push = require('pushNotifications');
 
 //this captures the event
 OS_IOS && $.cameraButton.addEventListener("click", function(_event) {
@@ -47,6 +50,7 @@ function processImage(_mediaObject, _callback) {
 					message : null,
 					success : true
 				});
+				notifyFollowers(_photoResp.model, "New Photo Added");
 			},
 			
 			error : function(e) { //debugger;
@@ -214,7 +218,21 @@ function processTableClicks(_event) {
 	}
 }
 
-
+function handleShareButtonClicked(_event) {
+	var collection, model;
+	
+	if(!_event.row) {
+		model = _event.data;
+	} else {
+		collection = Alloy.Collections.instance("Photo");
+		model = collection.get(_event.row.row_id);
+	}
+	
+	// commonjs library for sharing
+	sharing.sharingOptions({
+		model : model
+	});
+}
 /**
  * work on handling comments through the comment model
  */
@@ -379,3 +397,37 @@ function loadPhotos() {
 $.initialize = function() {
   loadPhotos();
 };
+
+// get all of my friends/followers
+function notifyFollowers(_model, _message) {
+	var currentUser = Alloy.Globals.currentUser;
+	
+	currentUser.getFollowers(function(_resp) {
+		if (_resp.success) {
+			$.followersList = _.pluck(_resp.collection.models, "id");
+			
+			// send a push notification to all friends
+			var msg = _message + " " + currentUser.get("email");
+			
+			// make the api call using the library
+			push.sendPush({
+				payload : {
+					custom : {
+						photo_id : _model.get("id"),
+					},
+					sound : "default",
+					alert : msg
+				},
+				to_ids : $.followersList.join(),
+			}, function(_responsePush) {
+				if (_responsePush.success) {
+					alert("Notified friends of new photo");
+				} else {
+					alert("Error notifying friends of new photo");
+				}
+			});
+		} else {
+			alert("Error updating friends and followers");
+		}
+	});
+}

@@ -82,7 +82,20 @@ function followBtnClicked(_event) {
 
 			// update the lists IF it was successful
 			updateFollowersFriendsLists(function() {
-
+				push.sendPush({
++					payload : {
++						custom : {},
++						sound : "default",
++						alert : "You have a new friend!" + currentUser.get("email")
++					},
++					to_ids : selUser.model.id,
++				}, function(_responsePush) {
++					if (_responsPush.success) {
++						alert("Notified user of new friend");
++					} else {
++						alert("Error notifying user of new friend");
++					}
++				});
 				// update the UI to reflect the change
 				getAllUsersExceptFriends(function() {
 					Alloy.Globals.PW.hideIndicator();

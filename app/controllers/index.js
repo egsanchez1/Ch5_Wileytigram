@@ -69,7 +69,7 @@ Ti.API.error('error logging in ' + _response.error);
  * p 182-183
  */
 $.loginSuccessAction = function(_options) {
-
+	initializePushNotifications(_options.model);
 	Ti.API.info('logged in user information');
 	Ti.API.info(JSON.stringify(_options.model, null, 2));
 
@@ -95,6 +95,56 @@ $.loginSuccessAction = function(_options) {
 	// do any necessary cleanup in login controller
 	$.loginController && $.loginController.close();
 };
+function initializePushNotifications(_user) {
+	
+	Alloy.Globals.pushToken = null;
+	var pushLib = require('pushNotifications');
+	
+	// initialize PushNotifications
+	pushLib.initialize(_user,
+	// notification received callback
+	function(_pushData) {
+		Ti.API.info('I GOT A PUSH NOTIFICATION');
+		// get the payload from the proper place depending on what platform you are on
+		var payload;
+		try {
+			if (_pushData.payload) {
+				payload = JSON.parse(_pushData.payload);
+			} else {
+				payload = _pushData;
+			}
+		} catch(e) {
+			payload = {};
+		}
+		
+		// display the information in an alert
+		if (OS_ANDROID) {
+			Ti.UI.createAlertDialog({
+				title : payload.android.title || "Alert",
+				message : payload.android.alert || "",
+				buttonNames : ['Ok']
+			}).show();
+		} else {
+			Ti.UI.createAlertDialog({
+				title : "Alert",
+				message : payload.alert || "",
+				buttonNames : ['Ok']
+			}).show();
+		}
+	},
+	// registration callback parameter
+	function(_pushInitData) {
+		if (_pushInitData) {
+			// save the token so we know it was initialized
+			Alloy.Globals.pushToken = _pushInitData.data.deviceToken;
+			
+			Ti.API.debug("Success: Initializing Push Notifications " + JSON.stringify(_pushInitData));
+		} else {
+			alert("Error Initializing Push Notifications");
+			Alloy.Globals.pushToken = null;
+		}
+	});
+}
 
 /**
  * if the userer isn't logged in, show the login controller
